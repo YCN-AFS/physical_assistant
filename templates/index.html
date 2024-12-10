@@ -6,13 +6,48 @@
     <title>Trợ lý Khoa học THCS</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            svg: {
+                fontCache: 'global'
+            },
+            startup: {
+                typeset: true
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
 </head>
 <body>
     <!-- Existing HTML structure remains the same -->
+     <!-- <p>\[ a = \frac{v_f - v_i}{t} \]</p>
+        <mathjax>
+            \(E = mc^2\)
+        </mathjax>
+     </p> -->
     <div class="container">
         <div class="header">
             <h1>Trợ lý thực hành Khoa học Tự nhiên khối THCS</h1>
             <p>Khám phá khoa học cùng trợ lý thông minh</p>
+            <p id="currentSubject">Môn học: Vật lý</p>
+        </div>
+
+        <div class="subject-selection">
+            <button class="subject-btn active" onclick="selectSubject('physics')">
+                <i class="fas fa-atom"></i> Vật lý
+            </button>
+            <button class="subject-btn" onclick="selectSubject('chemistry')">
+                <i class="fas fa-flask"></i> Hóa học
+            </button>
+            <button class="subject-btn" onclick="selectSubject('biology')">
+                <i class="fas fa-dna"></i> Sinh học
+            </button>
         </div>
 
         <div class="grade-selection">
@@ -38,6 +73,11 @@
         <div class="reference-section">
             <h3><i class="fas fa-video"></i> Tài liệu tham khảo:</h3>
             <div class="video-grid" id="videoGrid"></div>
+            <div class="view-more">
+                <a href="{{ url_for('documents') }}" class="view-more-btn">
+                    <i class="fas fa-book-open"></i> Xem thêm tài liệu
+                </a>
+            </div>
         </div>
 
         <div class="chat-section">

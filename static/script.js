@@ -1,4 +1,5 @@
 let currentGrade = null;
+let currentSubject = 'physics';
 
 function formatMarkdown(text) {
     // Format bold text: **text** -> <strong>text</strong>
@@ -19,6 +20,12 @@ function createMessageElement(type, content) {
     const formattedContent = formatMarkdown(content);
     
     div.innerHTML = prefix + formattedContent;
+    
+    // Trigger MathJax to render any math formulas in the new content
+    setTimeout(() => {
+        MathJax.typesetPromise([div]).catch((err) => console.log('MathJax error:', err));
+    }, 100);
+    
     return div;
 }
 
@@ -44,7 +51,7 @@ function selectGrade(grade) {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ grade: grade })
+        body: JSON.stringify({ grade: grade, subject: currentSubject })
     })
     .then(response => response.json())
     .then(data => {
@@ -68,7 +75,7 @@ function loadTopics(grade) {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ grade: grade })
+        body: JSON.stringify({ grade: grade, subject: currentSubject })
     })
     .then(response => response.json())
     .then(topics => {
@@ -94,7 +101,7 @@ function loadVideos(grade) {
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ grade: grade })
+        body: JSON.stringify({ grade: grade, subject: currentSubject })
     })
     .then(response => response.json())
     .then(videos => {
@@ -181,3 +188,26 @@ document.getElementById('questionInput').addEventListener('keypress', function(e
         askQuestion();
     }
 });
+
+function selectSubject(subject) {
+    currentSubject = subject;
+    // Cập nhật UI
+    document.querySelectorAll('.subject-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.closest('.subject-btn').classList.add('active');
+    document.getElementById('currentSubject').textContent = `Môn học: ${getSubjectName(subject)}`;
+    // Reset topics và videos
+    document.getElementById('topicsGrid').innerHTML = '';
+    document.getElementById('videoGrid').innerHTML = '';
+    document.getElementById('chatHistory').innerHTML = '';
+}
+
+function getSubjectName(subject) {
+    const names = {
+        'physics': 'Vật lý',
+        'chemistry': 'Hóa học',
+        'biology': 'Sinh học'
+    };
+    return names[subject] || subject;
+}
